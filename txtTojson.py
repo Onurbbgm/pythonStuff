@@ -3,7 +3,7 @@ import os
 import json
 
 #TODO Remove \ when present in text_content
-saveJsonFile = open("C:/Users/Bruno/Desktop/PUC/TCC 2/python-twitter-master/examples/resultOscars2018Day.json", "a+")
+saveJsonFile = open("C:/Users/Bruno/Desktop/PUC/TCC 2/python-twitter-master/examples/resultOscarsUserAna.json", "a+")
 idList = []
 count = 0
 saveJsonFile.write("[")
@@ -37,11 +37,18 @@ with open("C:/Users/Bruno/Desktop/PUC/TCC 2/python-twitter-master/examples/resul
 		  			likes = auxLikes.split(",",1)[0]
 		  		else:
 		  			likes = "0"
+		  		auxUser = line.split("user\": ",1)[1]
+		  		auxIdUser = auxUser.split("id\": ",1)[1]
+		  		idUser = auxIdUser.split(",",1)[0]
 	  			auxSource = line.split("source\": ",1)[1]
-	  			auxText = auxSource.split("text\": \"",1)[1]
+	  			auxText = auxSource.split("text\": \"",1)[1]	  			
 	  			text = auxText.split("\"",1)[0]
+	  			text = text.strip("\\")
+	  			text = text.strip("\u")
+	  			text = text.strip("\\r")
+	  			text = text.strip("\\n")
 	  			if "retweeted_status" in line:
-	  				retweet = "s"
+	  				retweet = "y"
 	  			#print retweet
 	  			#print language
 	  			#print idTweet
@@ -49,6 +56,7 @@ with open("C:/Users/Bruno/Desktop/PUC/TCC 2/python-twitter-master/examples/resul
 	  				idList.append(idTweet)
 	  				filetest.write(idTweet+"\n")
 	  				saveJsonFile.write("{\n" + "	\"id\": \""+idTweet+"\",\n"+
+	  									"    \"idUser\": " + idUser + ", \n" +
 	  									"	\"date_time\": \""+ date_time + "\",\n" +
 	  									"	\"hashtags\": \""+  "Oscars\",\n" +
 	  									"	\"retweet\": \"" + retweet +"\"," + "\n"+
