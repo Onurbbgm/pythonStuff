@@ -5,16 +5,15 @@ import sys, getopt
 import time
 from random import randint
 def generateJsonUsers(inputfile, outputfile):
-    #usersDictionary = {}
     idUserList = []
     with open(inputfile) as json_data:
       tweets = json.load(json_data)
-    
+    results = averagesAndTotals(inputfile)
     file  = open(outputfile, "a+")
-    file.write("[")
+    file.write("[")    
     for index in range(len(tweets)):
         tweet = tweets[index]
-        if tweet["idUser"] not in idUserList:
+        if tweet["idUser"] not in idUserList:            
             idUserList.append(tweet["idUser"])
             originalFollowers = tweet["followers_count"]
             retweetsTotal = tweet["retweet_count"]
@@ -35,6 +34,13 @@ def generateJsonUsers(inputfile, outputfile):
                         finalFollowers = tweUs["followers_count"]
             averageRetweets = retweetsTotal/number_of_tweets
             averageLikes = likesTotal/number_of_tweets
+            influence_level = 0            
+            if results["Average likes"] < averageLikes and results["Average retweets"] >= averageRetweets:
+                influence_level = 1
+            if results["Average likes"] >= averageLikes and results["Average retweets"] < averageRetweets:
+                influence_level = 1
+            if results["Average likes"] < averageLikes and results["Average retweets"] < averageRetweets:
+                influence_level = 2
             raisedFollowers = "n"
             if raiseOfFollowers is True:
                 raisedFollowers = "y"
@@ -48,10 +54,49 @@ def generateJsonUsers(inputfile, outputfile):
                                             "    \"final_followers_count\": "+ str(finalFollowers) + ",\n" +
                                             "	\"total_likes\": " + str(likesTotal) +",\n" +
                                             "    \"average_likes\": " + str(averageLikes) +",\n"+
-                                            "    \"nivel_popularidade\": "+ str(randint(0,4)) +"\n"
+                                            "    \"influence_level\": "+ str(influence_level) +"\n"
                                             "\n},\n")
     file.write("\n]")
     file.close()
+
+def averagesAndTotals(inputfile):
+    with open(inputfile) as json_data:
+      tweets = json.load(json_data)
+    allLikes = 0
+    allRetweets = 0
+    averageLikes = 0
+    averageRetweets = 0
+    totalFollowers = 0
+    averageFollowers = 0
+    number_of_tweets = 0
+    number_of_users = 0    
+    idUserList = []
+    for tweet in tweets:
+        allLikes += tweet["likes"]
+        allRetweets += tweet["retweet_count"]
+        number_of_tweets += 1
+        if tweet["idUser"] not in idUserList:
+            number_of_users += 1
+            idUserList.append(tweet["idUser"])
+            totalFollowers += tweet["followers_count"]            
+    averageLikes = allLikes/number_of_tweets
+    averageRetweets = allRetweets/number_of_tweets
+    averageFollowers = totalFollowers/number_of_users
+    averageNumberOfTweetsPerUser = number_of_tweets/number_of_users
+    results = {"Number of tweets":number_of_tweets, "Number of user":number_of_users,
+    "Average number of tweets per user":averageNumberOfTweetsPerUser,
+    "All likes":allLikes,"Average likes":averageLikes,
+    "All retweets":allRetweets,"Average retweets":averageRetweets,
+    "Average followers":averageFollowers}
+    print("Number of tweets: ", number_of_tweets)
+    print("Number of users: ", number_of_users)
+    print("Average number of tweets per user: ", averageNumberOfTweetsPerUser)
+    print("All likes: ", allLikes)
+    print("Average likes: ", averageLikes)
+    print("All retweets: ", allRetweets)
+    print("Average retweets: ", averageRetweets)
+    return results
+
 
 def main(argv):
    inputfile = ''
@@ -72,6 +117,7 @@ def main(argv):
    print 'Input file is "', inputfile
    print 'Output file is "', outputfile
    start_time = time.time()
+   #averagesAndTotals(inputfile)
    generateJsonUsers(inputfile, outputfile)
    print("--- %s seconds ---" % (time.time() - start_time))
 
