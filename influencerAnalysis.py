@@ -57,7 +57,11 @@ pred = clf.predict(ImportantDataForInfluencer)
 print(pred)
 #pandaPred = pred.toPandas()
 #pred.to_json()
-predJson = pd.read_csv(pred)
+#predJson = pd.read_csv()
+file = open("C:/Users/Bruno/Desktop/PUC/TCC 2/python-twitter-master/examples/influenciaPredict.txt", "a+")
+for preds in pred:
+    file.write(str(preds) +"\n")
+
 #for s in pred:
  #   print(s)
 print("Predict Probabilidade")
