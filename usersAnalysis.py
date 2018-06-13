@@ -55,8 +55,8 @@ def generateJsonUsers(inputfile, outputfile):
                                             "    \"final_followers_count\": "+ str(finalFollowers) + ",\n" +
                                             "	\"total_likes\": " + str(likesTotal) +",\n" +
                                             "    \"average_likes\": " + str(averageLikes) +",\n"+
-                                            "    \"influence_level\": "+ str(influence_level) +",\n"+
-                                            "    \"total_users\": "+str(number_of_users) +""+
+                                            "    \"influence_level\": "+ str(influence_level) +""+
+                                            #"    \"total_users\": "+str(number_of_users) +""+
                                             "\n},\n")
     file.write("\n]")
     file.close()
