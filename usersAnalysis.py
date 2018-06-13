@@ -9,6 +9,7 @@ def generateJsonUsers(inputfile, outputfile):
     with open(inputfile) as json_data:
       tweets = json.load(json_data)
     results = averagesAndTotals(inputfile)
+    number_of_users = results["Number of users"]
     file  = open(outputfile, "a+")
     file.write("[")    
     for index in range(len(tweets)):
@@ -41,20 +42,21 @@ def generateJsonUsers(inputfile, outputfile):
                 influence_level = 1
             if results["Average likes"] < averageLikes and results["Average retweets"] < averageRetweets:
                 influence_level = 2
-            raisedFollowers = "n"
+            raisedFollowers = 0
             if raiseOfFollowers is True:
-                raisedFollowers = "y"
+                raisedFollowers = 1
             file.write("{\n" + "	\"idUser\": \""+tweet["idUser"]+"\",\n"+	  								
-                                            "	\"hashtags\": \""+ tweet["hashtags"] +"\",\n" +
+                                          #  "	\"hashtags\": \""+ tweet["hashtags"] +"\",\n" +
                                             "	\"number_of_tweets\": " + str(number_of_tweets) +"," + "\n"+
                                             "	\"retweet_count_total\": " + str(retweetsTotal) +", \n" +
                                             "	\"average_retweet_count\": " + str(averageRetweets) +",\n" +
                                             "	\"followers_count\": " + str(originalFollowers) +",\n" +
-                                            "    \"followers_count_increased\": \""+ raisedFollowers + "\",\n"+
+                                            "    \"followers_count_increased\": "+ str(raisedFollowers) + ",\n"+
                                             "    \"final_followers_count\": "+ str(finalFollowers) + ",\n" +
                                             "	\"total_likes\": " + str(likesTotal) +",\n" +
                                             "    \"average_likes\": " + str(averageLikes) +",\n"+
-                                            "    \"influence_level\": "+ str(influence_level) +"\n"
+                                            "    \"influence_level\": "+ str(influence_level) +",\n"+
+                                            "    \"total_users\": "+str(number_of_users) +""+
                                             "\n},\n")
     file.write("\n]")
     file.close()
@@ -83,7 +85,7 @@ def averagesAndTotals(inputfile):
     averageRetweets = allRetweets/number_of_tweets
     averageFollowers = totalFollowers/number_of_users
     averageNumberOfTweetsPerUser = number_of_tweets/number_of_users
-    results = {"Number of tweets":number_of_tweets, "Number of user":number_of_users,
+    results = {"Number of tweets":number_of_tweets, "Number of users":number_of_users,
     "Average number of tweets per user":averageNumberOfTweetsPerUser,
     "All likes":allLikes,"Average likes":averageLikes,
     "All retweets":allRetweets,"Average retweets":averageRetweets,
