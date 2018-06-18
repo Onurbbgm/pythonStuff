@@ -28,9 +28,9 @@ def generateJsonUsers(inputfile, outputfile):
             averageComments = commentsTotal/number_of_posts
             averageLikes = likesTotal/number_of_posts
             influence_level = 0            
-            if results["Average likes"] < (averageLikes and results["Average comments"] >= averageComments):
+            if (results["Average likes"] < averageLikes and results["Average comments"] >= averageComments):
                 influence_level = 1
-            if results["Average likes"] >= (averageLikes and results["Average comments"] < averageComments):
+            if (results["Average likes"] >= averageLikes and results["Average comments"] < averageComments):
                 influence_level = 1
             if results["Average likes"] < averageLikes and results["Average comments"] < averageComments:
                 influence_level = 2            
@@ -80,6 +80,22 @@ def averagesAndTotals(inputfile):
     print("Average comments: ", averageComments)
     return results
 
+def countNumberOfInfluencers(inputfile):
+    occasionalInf = 0
+    influencer = 0
+    commonUser = 0
+    with open(inputfile) as json_data:
+      users = json.load(json_data)
+    for user in users:
+        if user["influence_level"] == 0:
+            commonUser += 1
+        if user["influence_level"] == 1:
+            occasionalInf += 1
+        if user["influence_level"] == 2:
+            influencer +=1 
+    print("Common user: ", commonUser)    
+    print("Occasional Influencer: ", commonUser)    
+    print("Influencer: ", influencer)
 
 def main(argv):
    inputfile = ''

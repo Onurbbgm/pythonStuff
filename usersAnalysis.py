@@ -9,7 +9,6 @@ def generateJsonUsers(inputfile, outputfile):
     with open(inputfile) as json_data:
       tweets = json.load(json_data)
     results = averagesAndTotals(inputfile)
-    number_of_users = results["Number of users"]
     file  = open(outputfile, "a+")
     file.write("[")    
     for index in range(len(tweets)):
@@ -36,11 +35,11 @@ def generateJsonUsers(inputfile, outputfile):
             averageRetweets = retweetsTotal/number_of_tweets
             averageLikes = likesTotal/number_of_tweets
             influence_level = 0            
-            if results["Average likes"] < averageLikes and results["Average retweets"] >= averageRetweets:
+            if (results["Average likes"] < averageLikes and results["Average retweets"] >= averageRetweets):
                 influence_level = 1
-            if results["Average likes"] >= averageLikes and results["Average retweets"] < averageRetweets:
+            if (results["Average likes"] >= averageLikes and results["Average retweets"] < averageRetweets):
                 influence_level = 1
-            if results["Average likes"] < averageLikes and results["Average retweets"] < averageRetweets:
+            if results["Average likes"] < averageLikes and results["Average retweets"] < averageRetweets and number_of_tweets >= 2:
                 influence_level = 2
             raisedFollowers = 0
             if raiseOfFollowers is True:

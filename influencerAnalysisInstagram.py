@@ -8,16 +8,17 @@ Created on Thu Jun 14 10:44:00 2018
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn import metrics
+from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction import DictVectorizer
 import matplotlib.pyplot as plt
 vec = DictVectorizer()
 #data = pd.read_json('resultOscarsUserAna2.json')
-data = pd.read_json('userInfFoodInstagram.json') #com nivel popularidade
+data = pd.read_json('userInfFoodInstagram2.json') #com nivel popularidade
 print(data)
 UsersId = data["username"].values
 TotalLikes = data["total_likes"].values
 AverageLikes = data["average_likes"].values
-RetweetCountTotal =  data["comments_count_total"].values
+CommentsCountTotal =  data["comments_count_total"].values
 AverageRetweet = data["average_comments_count"].values
 ImportantDataForInfluencer = data[["average_comments_count","average_likes"]].values
 #Popular user make calculation
@@ -86,6 +87,7 @@ plot_results2()
 #UsersId.astype(float)
 #print(preprocessing.scale(UsersId))
 #Predicting
+print("MultinomialNB")
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import MultinomialNB
 #clf = BernoulliNB()
@@ -108,19 +110,23 @@ print("Predict Probabilidade")
 print(clf.predict_proba(ImportantDataForInfluencer))
 print("Popular pos...")
 print(InfluenceLevel)
+resultAcc = accuracy_score(InfluenceLevel, pred)
+print("Accuracy")
+print(resultAcc)
 from sklearn.feature_extraction import DictVectorizer
 vec = DictVectorizer()
 #dataNum = vec.fit_transform(SomeData).toarray()
 #print(dataNum)
 
 #Nearest Neighbors of average retweets and likes
+print("NN")
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
 X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
-nbrs = NearestNeighbors(n_neighbors=2, algorithm='auto').fit(X)
+nbrs = NearestNeighbors(n_neighbors=2, algorithm='auto').fit(InfluenceLevelWiCom)
 #reshaped = ImportantDataForInfluencer.reshape(4760,-4760)
 #reshaped = ImportantDataForInfluencer.reshape(-3,3)
-#distances, indices = nbrs.kneighbors(reshaped)
-#print(indices)
-#print(distances)
-#print(nbrs.kneighbors_graph(reshaped).toarray())
+distances, indices = nbrs.kneighbors(InfluenceLevelWiCom)
+print(indices)
+print(distances)
+print(nbrs.kneighbors_graph(InfluenceLevelWiCom).toarray())
